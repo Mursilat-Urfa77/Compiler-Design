@@ -1,0 +1,26 @@
+%{
+#include <stdio.h>
+%}
+
+// Define patterns for tokens
+%%
+[ \t]+           ; // Ignore whitespaces and tabs
+\n               { printf("NEWLINE\n"); }
+"+"              { printf("PLUS operator\n"); }
+"-"              { printf("MINUS operator\n"); }
+"*"              { printf("MULTIPLY operator\n"); }
+"/"              { printf("DIVIDE operator\n"); }
+"="              { printf("ASSIGNMENT operator\n"); }
+[0-9]+           { printf("NUMBER: %s\n", yytext); }
+[a-zA-Z_][a-zA-Z0-9_]* { printf("IDENTIFIER: %s\n", yytext); }
+.                { printf("UNKNOWN CHARACTER: %s\n", yytext); }
+%%
+
+int main() {
+    yylex(); // Start lexical analysis
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}
