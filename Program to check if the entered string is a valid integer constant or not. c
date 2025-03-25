@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+// Function to check if the given string is a valid integer constant
+int isValidIntegerConstant(const char *str) {
+    int i = 0, length = strlen(str);
+
+    // Check if the string is empty
+    if (length == 0) return 0;
+
+    // Allow optional + or - at the beginning
+    if (str[i] == '+' || str[i] == '-') 
+        i++;
+
+    // Check if the remaining string is valid
+    if (str[i] == '\0') return 0; // No digits after sign
+
+    // If it starts with 0, it must be octal or hexadecimal
+    if (str[i] == '0') {
+        if (str[i + 1] == 'x' || str[i + 1] == 'X') { // Hexadecimal case
+            i += 2;
+            if (str[i] == '\0') return 0; // No digits after 0x
+            for (; i < length; i++) {
+                if (!isdigit(str[i]) && !(str[i] >= 'a' && str[i] <= 'f') && !(str[i] >= 'A' && str[i] <= 'F'))
+                    return 0; // Invalid hexadecimal character
+            }
+        } else { // Octal case (only 0-7 allowed)
+            for (; i < length; i++) {
+                if (str[i] < '0' || str[i] > '7')
+                    return 0; // Invalid octal digit
+            }
+        }
+    } else { // Regular decimal number
+        for (; i < length; i++) {
+            if (!isdigit(str[i]))
+                return 0; // Not a digit
+        }
+    }
+
+    return 1; // Valid integer constant
+}
+
+int main() {
+    char input[50];
+
+    // User input
+    printf("Enter a number: ");
+    scanf("%s", input);
+
+    // Check validity
+    if (isValidIntegerConstant(input))
+        printf("\"%s\" is a valid integer constant in C.\n", input);
+    else
+        printf("\"%s\" is NOT a valid integer constant in C.\n", input);
+
+    return 0;
+}
